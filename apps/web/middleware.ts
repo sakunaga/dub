@@ -31,7 +31,8 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
-  const { domain, path, key, fullKey } = parse(req);
+  try {
+    const { domain, path, key, fullKey } = parse(req);
 
   AxiomMiddleware(req, ev);
 
@@ -65,4 +66,8 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
   }
 
   return LinkMiddleware(req, ev);
+  } catch (error) {
+    console.error("Middleware error: ", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }
